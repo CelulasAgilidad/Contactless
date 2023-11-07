@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Lienzo de Dibujo</title>
+  <title>Lienzo de Dibujo Táctil</title>
   <style>
+    body {
+      margin: 0;
+      overflow: hidden; /* Evita el desplazamiento */
+    }
+
     canvas {
+      width: 80%; /* Ocupa el 80% del ancho de la pantalla */
+      height: 100vh; /* Ocupa toda la altura de la pantalla */
       border: 1px solid black;
     }
   </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </head>
 <body>
-  <canvas id="lienzo" width="400" height="400"></canvas>
+  <canvas id="lienzo"></canvas>
 
   <script>
-    // Obtén el elemento canvas y el contexto
     var canvas = document.getElementById("lienzo");
     var ctx = canvas.getContext("2d");
-
-    // Variables para rastrear el estado del dibujo
     var dibujando = false;
 
-    // Función para obtener las coordenadas del evento táctil o de ratón
     function obtenerCoordenadas(e) {
       var x, y;
       if (e.touches) {
@@ -32,9 +36,8 @@
       return { x, y };
     }
 
-    // Configura eventos de inicio de dibujo
     canvas.addEventListener("mousedown", function (e) {
-      e.preventDefault(); // Evita eventos predeterminados (como selección de texto en dispositivos táctiles)
+      e.preventDefault();
       var coordenadas = obtenerCoordenadas(e);
       dibujando = true;
       ctx.beginPath();
@@ -49,7 +52,6 @@
       ctx.moveTo(coordenadas.x, coordenadas.y);
     });
 
-    // Configura eventos de movimiento para dibujo
     canvas.addEventListener("mousemove", function (e) {
       if (dibujando) {
         var coordenadas = obtenerCoordenadas(e);
@@ -66,7 +68,6 @@
       }
     });
 
-    // Configura eventos de finalización de dibujo
     canvas.addEventListener("mouseup", function () {
       dibujando = false;
       ctx.closePath();

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lienzo de Dibujo</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="lienzo" width="400" height="400"></canvas>
+
+  <script>
+    // Obtén el elemento canvas y el contexto
+    var canvas = document.getElementById("lienzo");
+    var ctx = canvas.getContext("2d");
+
+    // Variables para rastrear el estado del dibujo
+    var dibujando = false;
+
+    // Función para obtener las coordenadas del evento táctil o de ratón
+    function obtenerCoordenadas(e) {
+      var x, y;
+      if (e.touches) {
+        x = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+        y = e.touches[0].clientY - canvas.getBoundingClientRect().top;
+      } else {
+        x = e.clientX - canvas.getBoundingClientRect().left;
+        y = e.clientY - canvas.getBoundingClientRect().top;
+      }
+      return { x, y };
+    }
+
+    // Configura eventos de inicio de dibujo
+    canvas.addEventListener("mousedown", function (e) {
+      e.preventDefault(); // Evita eventos predeterminados (como selección de texto en dispositivos táctiles)
+      var coordenadas = obtenerCoordenadas(e);
+      dibujando = true;
+      ctx.beginPath();
+      ctx.moveTo(coordenadas.x, coordenadas.y);
+    });
+
+    canvas.addEventListener("touchstart", function (e) {
+      e.preventDefault();
+      var coordenadas = obtenerCoordenadas(e);
+      dibujando = true;
+      ctx.beginPath();
+      ctx.moveTo(coordenadas.x, coordenadas.y);
+    });
+
+    // Configura eventos de movimiento para dibujo
+    canvas.addEventListener("mousemove", function (e) {
+      if (dibujando) {
+        var coordenadas = obtenerCoordenadas(e);
+        ctx.lineTo(coordenadas.x, coordenadas.y);
+        ctx.stroke();
+      }
+    });
+
+    canvas.addEventListener("touchmove", function (e) {
+      if (dibujando) {
+        var coordenadas = obtenerCoordenadas(e);
+        ctx.lineTo(coordenadas.x, coordenadas.y);
+        ctx.stroke();
+      }
+    });
+
+    // Configura eventos de finalización de dibujo
+    canvas.addEventListener("mouseup", function () {
+      dibujando = false;
+      ctx.closePath();
+    });
+
+    canvas.addEventListener("mouseleave", function () {
+      dibujando = false;
+      ctx.closePath();
+    });
+
+    canvas.addEventListener("touchend", function () {
+      dibujando = false;
+      ctx.closePath();
+    });
+  </script>
+</body>
+</html>
